@@ -37,7 +37,8 @@
         "auto",
         "vless",
         "hysteria2",
-        "shadowsocks"
+        "shadowsocks",
+        "hysteria2-se"
       ],
       "default": "__MODE__"
     },
@@ -47,7 +48,8 @@
       "outbounds": [
         "vless",
         "hysteria2",
-        "shadowsocks"
+        "shadowsocks",
+        "hysteria2-se"
       ],
       "url": "https://www.gstatic.com/generate_204",
       "interval": "3m",
@@ -100,6 +102,24 @@
       "server_port": 8388,
       "method": "2022-blake3-aes-128-gcm",
       "password": "meegkfWnmvuO7x8gpVAeyA=="
+    },
+    {
+      "type": "hysteria2",
+      "tag": "hysteria2-se",
+      "server": "80.78.28.244",
+      "server_port": 443,
+      "up_mbps": 30,
+      "down_mbps": 150,
+      "password": "poxjQJ//g4/Mx7dieymg0xfY",
+      "obfs": {
+        "type": "salamander",
+        "password": "MD2TUAA1QUEfuoRqkxsip5Dk"
+      },
+      "tls": {
+        "enabled": true,
+        "server_name": "www.apple.com",
+        "certificate": "-----BEGIN CERTIFICATE-----\nMIIBoDCCAUWgAwIBAgIUHS1iV76KqD6V+nsgZ7W6X8nTUm4wCgYIKoZIzj0EAwIw\nGDEWMBQGA1UEAwwNd3d3LmFwcGxlLmNvbTAeFw0yNjA2MjkxODE2NTNaFw0zNjA2\nMjYxODE2NTNaMBgxFjAUBgNVBAMMDXd3dy5hcHBsZS5jb20wWTATBgcqhkjOPQIB\nBggqhkjOPQMBBwNCAAQBAwJyqAOPhZIGnNs20sbe7EgANaZxyv943bXuQlpHWYFF\nVSq85O1iV+PUgFpVyplniRtPbtx+bsZELllI1PXno20wazAdBgNVHQ4EFgQUQzht\nEYQH6u7wzHb9c7aApOmrJlIwHwYDVR0jBBgwFoAUQzhtEYQH6u7wzHb9c7aApOmr\nJlIwDwYDVR0TAQH/BAUwAwEB/zAYBgNVHREEETAPgg13d3cuYXBwbGUuY29tMAoG\nCCqGSM49BAMCA0kAMEYCIQDcKw9iBPZXwKLPdHfICMaUTR1UMsOM4CIui2qfYkTS\nLgIhAMjwg8LInL/YPdFRdrXKBrsqoc2WlpaJ8YEklU9orwwS\n-----END CERTIFICATE-----"
+      }
     },
     {
       "type": "direct",
