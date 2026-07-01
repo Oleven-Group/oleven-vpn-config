@@ -1,0 +1,23 @@
+name: Validate config
+on:
+  push:
+    paths: [ "config.json" ]
+  workflow_dispatch:
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download sing-box
+        run: |
+          curl -fsSL -o sb.tgz https://github.com/SagerNet/sing-box/releases/download/v1.12.25/sing-box-1.12.25-linux-amd64.tar.gz
+          tar xzf sb.tgz
+          echo "SB=$PWD/sing-box-1.12.25-linux-amd64/sing-box" >> "$GITHUB_ENV"
+      - name: Validate every mode
+        run: |
+          set -e
+          for m in auto vless hysteria2 shadowsocks hysteria2-se; do
+            sed "s/__MODE__/$m/" config.json > /tmp/c.json
+            "$SB" check -c /tmp/c.json && echo "OK: $m"
+          done
+          echo "config VALID for all modes"

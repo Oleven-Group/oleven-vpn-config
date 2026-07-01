@@ -1,0 +1,31 @@
+name: Monitor nodes
+on:
+  schedule:
+    - cron: "*/30 * * * *"
+  workflow_dispatch:
+permissions:
+  issues: write
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Reachability
+        id: probe
+        run: |
+          fail=""
+          nc -z -w6 95.217.234.41 443  || fail="$fail node1(FI):443/REALITY"
+          nc -z -w6 95.217.234.41 8388 || fail="$fail node1(FI):8388/SS"
+          nc -z -w6 80.78.28.244  443  || fail="$fail node2(SE):443"
+          if [ -n "$fail" ]; then echo "down=$fail" >> "$GITHUB_OUTPUT"; echo "DOWN:$fail"; exit 1; fi
+          echo "all nodes reachable"
+      - name: Open issue on failure
+        if: failure()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.create({
+              owner: context.repo.owner, repo: context.repo.repo,
+              title: "⚠️ Oleven VPN — nodo non raggiungibile",
+              body: "Un nodo ha fallito il check di raggiungibilità.\nDettaglio nella run: " +
+                    context.serverUrl + "/" + context.repo.owner + "/" + context.repo.repo + "/actions/runs/" + context.runId
+            })
