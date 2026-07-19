@@ -38,17 +38,14 @@
         "auto",
         "cf-fi",
         "cf-se",
-        "direct-fi",
-        "direct-se"
+        "direct-fi"
       ]
     },
     {
       "type": "urltest",
       "tag": "auto",
       "outbounds": [
-        "direct-fi",
         "cf-fi",
-        "direct-se",
         "cf-se"
       ],
       "url": "https://www.gstatic.com/generate_204",
@@ -118,28 +115,6 @@
           "enabled": true,
           "public_key": "iGO72o-h3eHUWcvRgickfKzyvdhuUxBfwBEv-xFCjUo",
           "short_id": "01cff7f0beb4e1a3"
-        }
-      }
-    },
-    {
-      "type": "vless",
-      "tag": "direct-se",
-      "server": "80.78.28.244",
-      "server_port": 8443,
-      "uuid": "a8035435-524c-4699-ae2c-6a60aef09076",
-      "flow": "xtls-rprx-vision",
-      "packet_encoding": "xudp",
-      "tls": {
-        "enabled": true,
-        "server_name": "www.microsoft.com",
-        "utls": {
-          "enabled": true,
-          "fingerprint": "chrome"
-        },
-        "reality": {
-          "enabled": true,
-          "public_key": "W4MPlEcZbyX9QTSYIMJ9hzP4k61j-TJLnEFVFDWVfGw",
-          "short_id": "b34e68682840ff71"
         }
       }
     },
