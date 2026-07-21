@@ -47,8 +47,9 @@
       "type": "urltest",
       "tag": "auto",
       "outbounds": [
-        "cf-fi",
-        "cf-se"
+        "direct-fi",
+        "hy2-fi",
+        "ss-fi"
       ],
       "url": "https://www.gstatic.com/generate_204",
       "interval": "3m",
