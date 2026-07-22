@@ -60,12 +60,12 @@
     {
       "type": "vless",
       "tag": "cf-fi",
-      "server": "oleven-edge.emilia-torresg82.workers.dev",
+      "server": "vpn.oleven-group.ru",
       "server_port": 443,
       "uuid": "9a061f85-59a9-4a4a-9800-82e29a4afbbf",
       "tls": {
         "enabled": true,
-        "server_name": "oleven-edge.emilia-torresg82.workers.dev",
+        "server_name": "vpn.oleven-group.ru",
         "utls": {
           "enabled": true,
           "fingerprint": "chrome"
@@ -75,7 +75,7 @@
         "type": "ws",
         "path": "/oleven",
         "headers": {
-          "Host": "oleven-edge.emilia-torresg82.workers.dev"
+          "Host": "vpn.oleven-group.ru"
         }
       }
     },
@@ -128,8 +128,8 @@
       "tag": "hy2-fi",
       "server": "95.217.234.41",
       "server_port": 443,
-      "up_mbps": 30,
-      "down_mbps": 150,
+      "up_mbps": 60,
+      "down_mbps": 350,
       "password": "poxjQJ//g4/Mx7dieymg0xfY",
       "obfs": {
         "type": "salamander",
