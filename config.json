@@ -51,9 +51,7 @@
       "outbounds": [
         "direct-fi",
         "hy2-fi",
-        "ss-fi",
-        "grpc-fi",
-        "tuic-fi"
+        "ss-fi"
       ],
       "url": "https://www.gstatic.com/generate_204",
       "interval": "3m",
