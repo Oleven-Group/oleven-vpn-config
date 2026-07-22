@@ -40,7 +40,8 @@
         "cf-se",
         "direct-fi",
         "hy2-fi",
-        "ss-fi"
+        "ss-fi",
+        "grpc-fi"
       ]
     },
     {
@@ -49,7 +50,8 @@
       "outbounds": [
         "direct-fi",
         "hy2-fi",
-        "ss-fi"
+        "ss-fi",
+        "grpc-fi"
       ],
       "url": "https://www.gstatic.com/generate_204",
       "interval": "3m",
@@ -152,6 +154,30 @@
       "server_port": 8388,
       "method": "2022-blake3-aes-128-gcm",
       "password": "meegkfWnmvuO7x8gpVAeyA=="
+    },
+    {
+      "type": "vless",
+      "tag": "grpc-fi",
+      "server": "95.217.234.41",
+      "server_port": 2087,
+      "uuid": "9a061f85-59a9-4a4a-9800-82e29a4afbbf",
+      "tls": {
+        "enabled": true,
+        "server_name": "www.apple.com",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        },
+        "reality": {
+          "enabled": true,
+          "public_key": "iGO72o-h3eHUWcvRgickfKzyvdhuUxBfwBEv-xFCjUo",
+          "short_id": "01cff7f0beb4e1a3"
+        }
+      },
+      "transport": {
+        "type": "grpc",
+        "service_name": "grpc"
+      }
     },
     {
       "type": "direct",
