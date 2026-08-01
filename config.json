@@ -50,13 +50,13 @@
       "type": "urltest",
       "tag": "auto",
       "outbounds": [
+        "ss-fi",
         "direct-fi",
         "hy2-fi",
-        "ss-fi",
         "hy2-se"
       ],
       "url": "https://www.gstatic.com/generate_204",
-      "interval": "3m",
+      "interval": "90s",
       "tolerance": 200,
       "interrupt_exist_connections": false,
       "idle_timeout": "30m"
