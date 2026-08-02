@@ -23,7 +23,7 @@
         "172.19.0.1/30",
         "fdfe:dcba:9876::1/126"
       ],
-      "mtu": 4064,
+      "mtu": 1500,
       "auto_route": true,
       "strict_route": false,
       "stack": "gvisor"
@@ -52,12 +52,11 @@
       "outbounds": [
         "ss-fi",
         "direct-fi",
-        "hy2-fi",
-        "hy2-se"
+        "stls-fi"
       ],
       "url": "https://www.gstatic.com/generate_204",
-      "interval": "90s",
-      "tolerance": 200,
+      "interval": "2m30s",
+      "tolerance": 500,
       "interrupt_exist_connections": false,
       "idle_timeout": "30m"
     },
@@ -88,8 +87,8 @@
       "tag": "hy2-fi",
       "server": "95.217.234.41",
       "server_port": 443,
-      "up_mbps": 60,
-      "down_mbps": 350,
+      "up_mbps": 30,
+      "down_mbps": 150,
       "password": "poxjQJ//g4/Mx7dieymg0xfY",
       "obfs": {
         "type": "salamander",
@@ -162,8 +161,8 @@
       "server": "80.78.28.244",
       "server_port": 443,
       "password": "poxjQJ//g4/Mx7dieymg0xfY",
-      "up_mbps": 60,
-      "down_mbps": 350,
+      "up_mbps": 30,
+      "down_mbps": 150,
       "tls": {
         "enabled": true,
         "server_name": "www.apple.com",
