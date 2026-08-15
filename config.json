@@ -43,7 +43,8 @@
         "tuic-fi",
         "hy2-se",
         "direct-se",
-        "stls-fi"
+        "stls-fi",
+        "cf-ws"
       ]
     },
     {
@@ -210,6 +211,28 @@
         "utls": {
           "enabled": true,
           "fingerprint": "chrome"
+        }
+      }
+    },
+    {
+      "type": "vless",
+      "tag": "cf-ws",
+      "server": "vpn.oleven-group.ru",
+      "server_port": 8443,
+      "uuid": "62669361-f4c9-44e2-978b-18c022789751",
+      "tls": {
+        "enabled": true,
+        "server_name": "vpn.oleven-group.ru",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        }
+      },
+      "transport": {
+        "type": "ws",
+        "path": "/vpnws",
+        "headers": {
+          "Host": "vpn.oleven-group.ru"
         }
       }
     },
