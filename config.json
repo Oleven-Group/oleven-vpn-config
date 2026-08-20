@@ -10,10 +10,24 @@
         "type": "https",
         "server": "1.1.1.1",
         "detour": "proxy"
+      },
+      {
+        "tag": "direct-dns",
+        "type": "https",
+        "server": "1.1.1.1",
+        "detour": "direct"
       }
     ],
     "final": "remote",
-    "strategy": "ipv4_only"
+    "strategy": "ipv4_only",
+    "rules": [
+      {
+        "domain": [
+          "vpn.oleven-group.ru"
+        ],
+        "server": "direct-dns"
+      }
+    ]
   },
   "inbounds": [
     {
@@ -267,6 +281,9 @@
       }
     ],
     "final": "proxy",
-    "auto_detect_interface": true
+    "auto_detect_interface": true,
+    "default_domain_resolver": {
+      "server": "direct-dns"
+    }
   }
 }
