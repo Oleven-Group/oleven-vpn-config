@@ -1,0 +1,9 @@
+INFO[0000] network: updated default interface WiFi, index 3
+INFO[0000] inbound/mixed[probe-in]: tcp server started at 127.0.0.1:19310
+INFO[0000] sing-box started (0.33s)
+INFO[0000] outbound/vless[direct-fi]: outbound connection to www.gstatic.com:443
+INFO[0000] outbound/vless[cf-ws]: outbound connection to www.gstatic.com:443
+INFO[0000] outbound/shadowsocks[ss-fi]: outbound connection to www.gstatic.com:443
+INFO[0000] outbound/shadowsocks[stls-fi]: outbound connection to www.gstatic.com:443
+INFO[0000] outbound/vless[direct-fi]: outbound connection to www.gstatic.com:443
+INFO[0000] outbound/vless[cf-ws]: outbound connection to www.gstatic.com:443

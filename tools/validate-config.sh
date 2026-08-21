@@ -43,14 +43,22 @@ echo "Modi selezionabili rilevati dal config: $MODES"
 echo
 
 fail=0
+port=18100
 for m in $MODES; do
+  # porta DIVERSA per ogni modo: su Windows (e sotto carico su Linux) il socket della
+  # prova precedente puo' restare in TIME_WAIT e far fallire il bind, producendo un
+  # falso allarme. Un gate che grida al lupo viene ignorato, e allora non protegge piu'.
+  port=$((port+1))
   # __MODE__ -> modo, e TUN -> mixed (nessun privilegio richiesto in CI)
-  python3 - "$CFG" "$m" "$TMP/c.json" <<'PY'
+  python3 - "$CFG" "$m" "$TMP/c.json" "$port" <<'PY'
 import json,sys
 raw=open(sys.argv[1],encoding='utf-8').read().replace('__MODE__', sys.argv[2])
 c=json.loads(raw)
-c['inbounds']=[{"type":"mixed","tag":"probe-in","listen":"127.0.0.1","listen_port":18099}]
-c['log']={"level":"info","timestamp":False}
+c['inbounds']=[{"type":"mixed","tag":"probe-in","listen":"127.0.0.1","listen_port":int(sys.argv[4])}]
+# livello "warn": basta per intercettare i FATAL (che sono piu' severi) e il volume di
+# output ridotto evita che il processo di prova termini prematuramente quando lo stdout
+# viene rediretto su file (osservato su Windows con log info/debug).
+c['log']={"level":"warn","timestamp":False}
 json.dump(c, open(sys.argv[3],'w',encoding='utf-8'))
 PY
 
@@ -59,17 +67,30 @@ PY
     echo "FAIL [$m] schema non valido:"; sed 's/^/    /' "$TMP/check.out" | head -5; fail=1; continue
   fi
 
-  # 2) avvio reale (risolve il grafo outbound). timeout => resta vivo => OK.
-  timeout 6 "$SB" run -c "$TMP/c.json" >"$TMP/run.out" 2>&1
-  rc=$?
-  # ripulisci i codici colore ANSI prima di cercare gli errori
-  sed -i 's/\x1b\[[0-9;]*m//g' "$TMP/run.out" 2>/dev/null || true
+  # 2) avvio reale: il criterio non e' "il processo sopravvive N secondi" (fragile e
+  #    intermittente) ma "il core arriva ad ASCOLTARE": se apre l'inbound, il grafo degli
+  #    outbound e' stato risolto e il servizio e' partito davvero.
+  "$SB" run -c "$TMP/c.json" >"$TMP/run.out" 2>&1 &
+  sbpid=$!
+  listening=0
+  for _ in 1 2 3 4 5 6 7 8 9 10 11 12; do
+    if python3 -c "import socket,sys; s=socket.socket(); s.settimeout(0.6)
+try:
+    s.connect(('127.0.0.1', $port)); s.close(); sys.exit(0)
+except Exception:
+    sys.exit(1)" 2>/dev/null; then listening=1; break; fi
+    grep -qiE "FATAL" "$TMP/run.out" 2>/dev/null && break
+    kill -0 "$sbpid" 2>/dev/null || break
+    sleep 0.5
+  done
+  kill "$sbpid" 2>/dev/null; wait "$sbpid" 2>/dev/null
+  sed -i 's/\[[0-9;]*m//g' "$TMP/run.out" 2>/dev/null || true
 
   if grep -qiE "FATAL|dependency\[.*\] not found|not found for outbound" "$TMP/run.out"; then
     echo "FAIL [$m] il core non parte:"; grep -iE "FATAL|dependency|not found" "$TMP/run.out" | head -3 | sed 's/^/    /'; fail=1; continue
   fi
-  if [ $rc -ne 124 ] && [ $rc -ne 0 ]; then
-    echo "FAIL [$m] uscita inattesa (rc=$rc):"; tail -3 "$TMP/run.out" | sed 's/^/    /'; fail=1; continue
+  if [ "$listening" -ne 1 ]; then
+    echo "FAIL [$m] il core non e' mai arrivato ad ascoltare:"; tail -4 "$TMP/run.out" | sed 's/^/    /'; fail=1; continue
   fi
   echo "OK   [$m] schema valido + core avviato (grafo risolto)"
 done
