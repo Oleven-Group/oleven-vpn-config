@@ -14,11 +14,16 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Download sing-box
+      - name: Download sing-box (STESSO motore dei client)
+        # DEVE essere il fork shtorm-7/sing-box-extended alla versione pinnata negli script
+        # di build di Android e iOS (scripts/build-libbox*.sh): il config di produzione usa
+        # costrutti che l'upstream piu' recente rifiuta (es. un server DNS con detour verso
+        # 'direct'), mentre il motore realmente in esecuzione sui client li accetta.
+        # Validare con un motore diverso produce falsi allarmi e, peggio, falsi OK.
         run: |
           set -e
-          V=1.12.25
-          curl -fsSL -o sb.tgz "https://github.com/SagerNet/sing-box/releases/download/v${V}/sing-box-${V}-linux-amd64.tar.gz"
+          V=1.12.22-extended-1.6.0
+          curl -fsSL -o sb.tgz "https://github.com/shtorm-7/sing-box-extended/releases/download/v${V}/sing-box-${V}-linux-amd64.tar.gz"
           tar xzf sb.tgz
           echo "SB=$PWD/sing-box-${V}-linux-amd64/sing-box" >> "$GITHUB_ENV"
 
