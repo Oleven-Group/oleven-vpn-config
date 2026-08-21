@@ -1,23 +1,48 @@
 name: Validate config
 on:
   push:
-    paths: [ "config.json" ]
+    paths: [ "config.json", "tools/validate-config.sh", ".github/workflows/validate.yml" ]
+  pull_request:
   workflow_dispatch:
+
+# Questo config viene servito a TUTTI i client (il config remoto vince sul bundled):
+# se viene pubblicato rotto, la VPN smette di partire ovunque. Il gate deve quindi
+# provare l'AVVIO REALE di ogni modo, non solo la validita' dello schema.
 jobs:
-  check:
+  validate:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - name: Download sing-box
         run: |
-          curl -fsSL -o sb.tgz https://github.com/SagerNet/sing-box/releases/download/v1.12.25/sing-box-1.12.25-linux-amd64.tar.gz
+          set -e
+          V=1.12.25
+          curl -fsSL -o sb.tgz "https://github.com/SagerNet/sing-box/releases/download/v${V}/sing-box-${V}-linux-amd64.tar.gz"
           tar xzf sb.tgz
-          echo "SB=$PWD/sing-box-1.12.25-linux-amd64/sing-box" >> "$GITHUB_ENV"
-      - name: Validate every mode
+          echo "SB=$PWD/sing-box-${V}-linux-amd64/sing-box" >> "$GITHUB_ENV"
+
+      - name: Validate every selectable mode (real start + product invariants)
+        run: |
+          chmod +x tools/validate-config.sh
+          ./tools/validate-config.sh config.json
+
+      - name: Self-test del gate (deve FALLIRE su un config rotto)
+        # Un gate che non fallisce mai e' inutile: qui iniettiamo il difetto che ha gia'
+        # causato un rischio reale (riferimento a un outbound inesistente: passa `check`,
+        # FATAL a `run`) e pretendiamo che il gate lo intercetti.
         run: |
           set -e
-          for m in auto vless hysteria2 shadowsocks hysteria2-se; do
-            sed "s/__MODE__/$m/" config.json > /tmp/c.json
-            "$SB" check -c /tmp/c.json && echo "OK: $m"
-          done
-          echo "config VALID for all modes"
+          python3 - <<'PY'
+          import json
+          c=json.load(open('config.json',encoding='utf-8'))
+          for o in c['outbounds']:
+              if o.get('tag')=='auto':
+                  o['outbounds'].append('outbound-inesistente')
+          json.dump(c, open('/tmp/broken.json','w',encoding='utf-8'))
+          PY
+          if ./tools/validate-config.sh /tmp/broken.json; then
+            echo "::error::Il gate NON ha rilevato un config rotto: la validazione non protegge nulla."
+            exit 1
+          fi
+          echo "Self-test OK: il gate rileva i config rotti."
